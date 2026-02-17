@@ -44,19 +44,9 @@ class ReservationSeeder extends Seeder
 
         if (!$site) {
             $this->command->warn('Brak strony 2wheels-rental. Tworzę ją...');
-            
-            // Znajdź lub utwórz klienta
-            $customer = \App\Models\Customer::firstOrCreate(
-                ['slug' => '2wheels-rental'],
-                [
-                    'name' => '2Wheels Rental',
-                    'email' => 'kontakt@2wheels-rental.pl',
-                    'status' => 'active',
-                ]
-            );
-            
+
             $site = Site::create([
-                'customer_id' => $customer->id,
+                'tenant_id' => $this->tenant->id,
                 'name' => '2Wheels Rental',
                 'slug' => '2wheels-rental',
                 'status' => 'live',

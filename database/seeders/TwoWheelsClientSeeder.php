@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
 use App\Models\Site;
 use App\Models\User;
 use App\Modules\Core\Models\Tenant;
@@ -16,8 +15,7 @@ use Illuminate\Support\Facades\Hash;
  *
  * Tworzy:
  * - Użytkownika z rolą 'client'
- * - Powiązanie z Customer '2Wheels Rental'
- * - Powiązanie z Site '2wheels-rental'
+ * - Site '2wheels-rental'
  */
 class TwoWheelsClientSeeder extends Seeder
 {
@@ -35,31 +33,11 @@ class TwoWheelsClientSeeder extends Seeder
             return;
         }
 
-        // Binduj tenant
-        app()->instance('current_tenant', $tenant);
-
-        // Pobierz lub utwórz Customer
-        $customer = Customer::firstOrCreate(
-            ['slug' => '2wheels-rental'],
-            [
-                'tenant_id' => $tenant->id,
-                'name' => '2Wheels Rental',
-                'email' => 'kontakt@2wheels-rental.pl',
-                'phone' => '+48 123 456 789',
-                'status' => 'active',
-                'source' => 'direct',
-                'notes' => 'Pierwszy klient CMS - wypożyczalnia motocykli',
-            ]
-        );
-
-        $this->command->info("Customer: {$customer->name} (ID: {$customer->id})");
-
         // Pobierz lub utwórz Site
         $site = Site::firstOrCreate(
             ['slug' => '2wheels-rental'],
             [
                 'tenant_id' => $tenant->id,
-                'customer_id' => $customer->id,
                 'name' => '2Wheels Rental',
                 'status' => 'live',
                 'production_url' => 'https://2wheels-rental.pl',
@@ -86,33 +64,6 @@ class TwoWheelsClientSeeder extends Seeder
         }
 
         $this->command->info("User: {$user->email} (rola: client)");
-
-        // Powiąż użytkownika z Customer
-        if (!$user->customers()->where('customers.id', $customer->id)->exists()) {
-            $user->customers()->attach($customer->id, [
-                'role' => 'admin',
-                'can_view_billing' => true,
-                'can_manage_users' => false,
-                'notify_new_invoice' => true,
-                'notify_site_updates' => true,
-                'invited_at' => now(),
-                'accepted_at' => now(),
-            ]);
-            $this->command->info("-> Połączono z Customer");
-        }
-
-        // Powiąż użytkownika z Site
-        if (!$user->sites()->where('sites.id', $site->id)->exists()) {
-            $user->sites()->attach($site->id, [
-                'role' => 'admin',
-                'can_publish' => false, // Klient nie może publikować
-                'can_manage_media' => true,
-                'can_view_analytics' => true,
-                'invited_at' => now(),
-                'accepted_at' => now(),
-            ]);
-            $this->command->info("-> Połączono z Site");
-        }
 
         $this->command->newLine();
         $this->command->info('=== DANE LOGOWANIA 2WHEELS ===');
