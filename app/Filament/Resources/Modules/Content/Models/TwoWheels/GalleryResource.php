@@ -30,7 +30,7 @@ final class GalleryResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Galeria';
 
-    protected static ?string $navigationGroup = '2Wheels Rental';
+    protected static ?int $navigationSort = 20;
 
     public const COLLECTION_GALLERY = 'gallery';
 

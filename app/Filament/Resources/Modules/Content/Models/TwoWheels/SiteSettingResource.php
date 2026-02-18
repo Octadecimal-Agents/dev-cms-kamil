@@ -32,7 +32,7 @@ final class SiteSettingResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Ustawienia strony';
 
-    protected static ?string $navigationGroup = '2Wheels Rental';
+    protected static ?int $navigationSort = 70;
 
     /**
      * Filtruj dane po tenant_id.

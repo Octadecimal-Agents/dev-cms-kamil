@@ -30,7 +30,7 @@ final class TestimonialResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Opinie';
 
-    protected static ?string $navigationGroup = '2Wheels Rental';
+    protected static ?int $navigationSort = 80;
 
     /**
      * Filtruj dane po tenant_id.
