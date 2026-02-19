@@ -320,9 +320,9 @@ class AdminPanelProvider extends PanelProvider
                 'info' => Color::Sky,
             ])
             ->brandName('2Wheels Rental')
-            ->brandLogo(asset('images/logo-2wheels.png'))
-            ->darkModeBrandLogo(asset('images/logo-2wheels.png'))
-            ->homeUrl('https://2wheels-rental.pl/')
+            ->brandLogo(asset('storage/2wheels/logo.jpg'))
+            ->darkModeBrandLogo(asset('storage/2wheels/logo.jpg'))
+            ->homeUrl(config('app.2wheels_frontend_url', 'https://2wheels-rental.pl') . '/')
             ->favicon(asset('favicon.ico'))
 
             // Dark mode domyślnie
@@ -458,7 +458,7 @@ class AdminPanelProvider extends PanelProvider
                         ->label('Mój profil')
                         ->icon('heroicon-o-user-circle')
                         ->url('/admin/edit-profile')
-                        ->sort(999),
+                        ->sort(-5),
                     NavigationItem::make('Mailbox')
                         ->label('Mailbox')
                         ->icon('heroicon-o-envelope')

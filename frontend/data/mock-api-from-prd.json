@@ -1,0 +1,280 @@
+{
+  "template": "2wheels-rental.pl",
+  "source": "2wheels-rental.pl",
+  "content": {
+    "site": {
+      "name": "2 WHEELS RENTAL",
+      "tagline": "Profesjonalna wypożyczalnia motocykli",
+      "logo": "/img-from-prd/logo.png"
+    },
+    "navigation": {
+      "links": [
+        { "label": "Strona główna", "href": "/" },
+        { "label": "Motocykle", "href": "#motocykle" },
+        { "label": "Cennik", "href": "#cennik" },
+        { "label": "Kontakt", "href": "#kontakt" },
+        { "label": "FAQ", "href": "#faq" }
+      ],
+      "cta": {
+        "label": "Zaloguj się",
+        "href": "/login",
+        "variant": "outline"
+      }
+    },
+    "hero": {
+      "title": "Wypożycz motocykl",
+      "titleHighlight": "swoich marzeń",
+      "subtitle": "Najlepsze modele, najlepsze ceny, niezapomniane przeżycia",
+      "image": "/img-from-prd/hero-bike.png",
+      "buttons": [
+        { "label": "Wypożycz teraz", "href": "#rezerwacja", "variant": "primary" },
+        { "label": "Dowiedz się więcej", "href": "#o-nas", "variant": "secondary" }
+      ],
+      "stats": [
+        { "value": "50+", "label": "Motocykli" },
+        { "value": "1020+", "label": "Zadowolonych klientów" },
+        { "value": "24/7", "label": "Wsparcie" }
+      ]
+    },
+    "howItWorks": {
+      "title": "Jak wypożyczyć motocykl?",
+      "subtitle": "Prosty proces rezerwacji w 6 krokach",
+      "steps": [
+        {
+          "number": 1,
+          "title": "Wybierz datę",
+          "description": "Określ datę odbioru i zwrotu motocykla.",
+          "icon": "calendar"
+        },
+        {
+          "number": 2,
+          "title": "Wybierz motocykl",
+          "description": "Wybierz model motocykla, który spełnia Twoje oczekiwania.",
+          "icon": "motorcycle"
+        },
+        {
+          "number": 3,
+          "title": "Wypełnij formularz",
+          "description": "Podaj swoje dane osobowe oraz szczegóły rezerwacji.",
+          "icon": "document"
+        },
+        {
+          "number": 4,
+          "title": "Opłać rezerwację",
+          "description": "Dokonaj płatności online lub przy odbiorze.",
+          "icon": "payment"
+        },
+        {
+          "number": 5,
+          "title": "Odbierz motocykl",
+          "description": "Przyjedź do nas i odbierz swój wymarzony motocykl.",
+          "icon": "key"
+        },
+        {
+          "number": 6,
+          "title": "Ciesz się jazdą",
+          "description": "Ruszaj w drogę i przeżyj niezapomniane chwile!",
+          "icon": "helmet"
+        }
+      ]
+    },
+    "fleet": {
+      "title": "Wybierz swój motocykl",
+      "subtitle": "Przeglądaj naszą flotę i znajdź idealny motocykl dla siebie",
+      "categories": [
+        { "label": "Wszystkie", "value": "wszystkie", "active": true },
+        { "label": "Sportowe", "value": "sport" },
+        { "label": "Turystyczne", "value": "touring" },
+        { "label": "Chopper", "value": "cruiser" },
+        { "label": "Cross", "value": "cross" },
+        { "label": "Enduro", "value": "enduro" }
+      ],
+      "bikes": []
+    },
+    "whyUs": {
+      "title": "Dlaczego warto nas wybrać?",
+      "subtitle": "Oferujemy najlepsze warunki wypożyczenia i profesjonalną obsługę",
+      "features": [
+        {
+          "icon": "gear",
+          "title": "Szeroki wybór",
+          "description": "Posiadamy bogatą flotę motocykli, dopasowanych do różnych stylów jazdy."
+        },
+        {
+          "icon": "shield",
+          "title": "Bezpieczeństwo",
+          "description": "Wszystkie nasze motocykle są regularnie serwisowane i w pełni ubezpieczone."
+        },
+        {
+          "icon": "star",
+          "title": "Profesjonalizm",
+          "description": "Zapewniamy kompleksową obsługę i wsparcie na każdym etapie wypożyczenia."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Nasze ceny",
+      "subtitle": "Przejrzyste ceny bez ukrytych kosztów",
+      "table": [
+        { "period": "1-3 dni", "price": "300 PLN", "deposit": "2000-5000 PLN" },
+        { "period": "4-7 dni", "price": "250 PLN", "deposit": "2000-5000 PLN" },
+        { "period": "8-14 dni", "price": "200 PLN", "deposit": "2000-5000 PLN" },
+        { "period": "15+ dni", "price": "150 PLN", "deposit": "2000-5000 PLN" }
+      ],
+      "disclaimer": "Powyższe ceny są orientacyjne. W celu uzyskania dokładnej wyceny prosimy o kontakt."
+    },
+    "terms": {
+      "title": "Warunki wypożyczenia",
+      "subtitle": "Przed wypożyczeniem zapoznaj się z naszymi warunkami",
+      "items": [
+        {
+          "title": "Wymagania",
+          "points": [
+            "Minimalny wiek wypożyczającego to 21 lat.",
+            "Wymagane jest posiadanie prawa jazdy kategorii A od minimum 2 lat.",
+            "Prawo jazdy musi być ważne przez cały okres wypożyczenia."
+          ]
+        },
+        {
+          "title": "Kaucja",
+          "points": [
+            "Wymagana jest kaucja zwrotna w wysokości 2000-5000 zł (w zależności od modelu).",
+            "Kaucja jest blokowana na karcie kredytowej i zwracana po zwrocie motocykla w stanie nienaruszonym."
+          ]
+        },
+        {
+          "title": "Ubezpieczenie",
+          "points": [
+            "Wszystkie motocykle są w pełni ubezpieczone.",
+            "Ubezpieczenie obejmuje OC, AC oraz NNW.",
+            "Wypożyczający odpowiada za szkody wynikające z nieprawidłowego użytkowania."
+          ]
+        },
+        {
+          "title": "Odpowiedzialność",
+          "points": [
+            "Motocykl należy zwrócić w stanie nienaruszonym, z pełnym bakiem paliwa.",
+            "Zwrot możliwy w godzinach pracy wypożyczalni.",
+            "Opóźnienie w zwrocie skutkuje dodatkowymi opłatami."
+          ]
+        }
+      ]
+    },
+    "gallery": {
+      "title": "Zobacz nasze motocykle",
+      "subtitle": "Przeglądaj zdjęcia naszych motocykli"
+    },
+    "testimonials": {
+      "title": "Zadowoleni klienci",
+      "subtitle": "Opinie zadowolonych klientów",
+      "items": [
+        {
+          "name": "Anna Kowalska",
+          "rating": 5,
+          "text": "Niesamowite doświadczenie! Motocykl był w idealnym stanie, a obsługa bardzo pomocna. Na pewno wrócę!",
+          "avatar": "/img-from-prd/testimonials/anna.jpg"
+        },
+        {
+          "name": "Jan Nowak",
+          "rating": 5,
+          "text": "Profesjonalna obsługa i szybka rezerwacja. Polecam każdemu!",
+          "avatar": "/img-from-prd/testimonials/jan.jpg"
+        },
+        {
+          "name": "Michał Wiśniewski",
+          "rating": 5,
+          "text": "Najlepsza wypożyczalnia w mieście. Mega wybór modeli!",
+          "avatar": "/img-from-prd/testimonials/michal.jpg"
+        },
+        {
+          "name": "Katarzyna Zielińska",
+          "rating": 5,
+          "text": "Świetna wypożyczalnia! Motocykle w doskonałym stanie, obsługa na najwyższym poziomie.",
+          "avatar": "/img-from-prd/testimonials/katarzyna.jpg"
+        },
+        {
+          "name": "Piotr Król",
+          "rating": 5,
+          "text": "Wypożyczyłem BMW GS na tydzień. Motocykl jak nowy, wszystko działało perfekcyjnie. Polecam!",
+          "avatar": "/img-from-prd/testimonials/piotr.jpg"
+        },
+        {
+          "name": "Magdalena Nowak",
+          "rating": 5,
+          "text": "Najlepsza wypożyczalnia w regionie. Szybka rezerwacja, przejrzyste warunki, świetne ceny.",
+          "avatar": "/img-from-prd/testimonials/magdalena.jpg"
+        }
+      ]
+    },
+    "location": {
+      "title": "Gdzie nas znaleźć?",
+      "subtitle": "Odwiedź naszą wypożyczalnię"
+    },
+    "contact": {
+      "title": "Masz pytania? Skontaktuj się z nami!",
+      "subtitle": "Wypełnij formularz, a skontaktujemy się z Tobą",
+      "address": {
+        "street": "ul. Łokuciewskiego 4a m291",
+        "city": "Tarnów",
+        "zip": "33-100"
+      },
+      "phone": "+48 123 456 789",
+      "email": "kontakt@2wheels-rental.pl",
+      "hours": {
+        "weekdays": "Pn-Pt: 9:00 - 18:00",
+        "saturday": "Sob: 10:00 - 16:00",
+        "sunday": "Niedziela: Zamknięte"
+      },
+      "form": {
+        "namePlaceholder": "Imię i nazwisko",
+        "emailPlaceholder": "Adres e-mail",
+        "subjectPlaceholder": "Temat",
+        "messagePlaceholder": "Wiadomość",
+        "submitButton": "Wyślij wiadomość",
+        "consentText": "Akceptuję regulamin i politykę prywatności."
+      }
+    },
+    "footer": {
+      "description": "Profesjonalna wypożyczalnia motocykli. Najlepsze modele, najlepsze ceny, niezapomniane przeżycia.",
+      "quickLinks": {
+        "title": "Szybkie linki",
+        "links": [
+          { "label": "Strona główna", "href": "/" },
+          { "label": "Motocykle", "href": "#motocykle" },
+          { "label": "Cennik", "href": "#cennik" }
+        ]
+      },
+      "infoLinks": {
+        "title": "Informacje",
+        "links": [
+          { "label": "Regulamin", "href": "/regulamin" },
+          { "label": "Polityka prywatności", "href": "/polityka-prywatnosci" },
+          { "label": "FAQ", "href": "#faq" }
+        ]
+      },
+      "contactLinks": {
+        "title": "Kontakt",
+        "links": [
+          { "label": "Kontakt", "href": "#kontakt" },
+          { "label": "Telefon", "href": "tel:+48123456789" },
+          { "label": "Email", "href": "mailto:info@2wheels-rental.pl" },
+          { "label": "Adres", "href": "#kontakt" }
+        ]
+      },
+      "socialMedia": {
+        "facebook": "https://facebook.com/2wheels-rental",
+        "instagram": "https://instagram.com/2wheels-rental",
+        "linkedin": "https://linkedin.com/company/2wheels-rental",
+        "youtube": "https://youtube.com/@2wheels-rental"
+      },
+      "legal": {
+        "copyright": "© 2023 2 Wheels Rental. All rights reserved.",
+        "creator": "Strona stworzona przez Octadecimal Studio",
+        "links": [
+          { "label": "Polityka prywatności", "href": "/polityka-prywatnosci" },
+          { "label": "Regulamin", "href": "/regulamin" }
+        ]
+      }
+    }
+  }
+}

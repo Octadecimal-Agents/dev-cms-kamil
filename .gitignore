@@ -24,3 +24,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+deploy/2wheels-deploy.tar.gz
+deploy/dump.sql
+*.tar.gz

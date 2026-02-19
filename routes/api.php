@@ -50,6 +50,11 @@ Route::prefix('2wheels')->middleware('web')->group(function () {
     Route::get('/process-steps', [TwoWheelsController::class, 'processSteps'])->name('api.2wheels.process-steps');
     Route::get('/site-setting', [TwoWheelsController::class, 'siteSetting'])->name('api.2wheels.site-setting');
     Route::get('/gallery', [TwoWheelsController::class, 'gallery'])->name('api.2wheels.gallery');
+    Route::get('/rental-conditions', [TwoWheelsController::class, 'rentalConditions'])->name('api.2wheels.rental-conditions');
+    Route::get('/pricing', [TwoWheelsController::class, 'pricingSettings'])->name('api.2wheels.pricing');
+    Route::get('/pricing-notes', [TwoWheelsController::class, 'pricingNotes'])->name('api.2wheels.pricing-notes');
+    Route::get('/reservation-settings', [TwoWheelsController::class, 'reservationSettings'])->name('api.2wheels.reservation-settings');
+    Route::post('/reservation', [TwoWheelsController::class, 'submitReservation'])->name('api.2wheels.reservation');
 });
 
 // ============================================================

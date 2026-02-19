@@ -1,0 +1,16 @@
+# Root .htaccess — OVH docroot is /home/wheelse/
+# Rewrites all requests to www/ subdirectory where the actual site lives.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Don't rewrite requests already targeting www/
+    RewriteCond %{REQUEST_URI} !^/www/
+
+    # If a .html version exists in www/, rewrite directly to it
+    # (handles /regulamin → /www/regulamin.html, /motocykle/slug → /www/slug.html)
+    RewriteCond %{DOCUMENT_ROOT}/www%{REQUEST_URI}.html -f
+    RewriteRule ^(.+)$ /www/$1.html [L]
+
+    # Everything else → www/
+    RewriteRule ^(.*)$ /www/$1 [L]
+</IfModule>
