@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DynamicLegalPage from '@/components/DynamicLegalPage';
 import { getAllContent } from '@/lib/api';
 
+// Force dynamic rendering - fetch fresh data on every request
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
@@ -46,9 +48,10 @@ export default async function RegulaminPage() {
             </p>
           </div>
           <div className="max-w-4xl mx-auto bg-gray-50 p-8 md:p-12 rounded-2xl shadow-md">
-            <div
+            <DynamicLegalPage
+              field="regulamin_content"
+              initialHtml={html}
               className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-primary-black prose-p:text-gray-700 prose-strong:text-accent-red prose-ul:list-disc prose-ul:pl-6 prose-li:text-gray-700 prose-blockquote:border-l-accent-red prose-blockquote:bg-white prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:italic"
-              dangerouslySetInnerHTML={{ __html: html }}
             />
           </div>
         </div>
