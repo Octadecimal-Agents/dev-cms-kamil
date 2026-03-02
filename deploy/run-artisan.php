@@ -32,8 +32,7 @@ $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
 $commands = [
     ['migrate', '--force' => true],
     ['optimize:clear'],
-    ['config:cache'],
-    ['route:cache'],
+    // NOTE: config:cache and route:cache break OVH shared hosting — .env must be read directly
     ['view:cache'],
 ];
 

@@ -113,8 +113,7 @@ $art = escapeshellarg("$appDir/artisan");
 $cmds = [
     "migrate --force"    => "Running migrations",
     "optimize:clear"     => "Clearing caches",
-    "config:cache"       => "Caching config",
-    "route:cache"        => "Caching routes",
+    // NOTE: config:cache breaks OVH shared hosting — .env must be read directly
     "view:cache"         => "Caching views",
 ];
 foreach ($cmds as $cmd => $label) {

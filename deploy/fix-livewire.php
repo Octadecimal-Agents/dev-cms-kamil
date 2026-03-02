@@ -95,12 +95,7 @@ try {
     out("  " . trim($output));
     out("  Exit code: $status");
 
-    // Run config:cache
-    out("  Running: config:cache");
-    $status = \Illuminate\Support\Facades\Artisan::call('config:cache');
-    $output = \Illuminate\Support\Facades\Artisan::output();
-    out("  " . trim($output));
-    out("  Exit code: $status");
+    // NOTE: config:cache skipped — breaks OVH shared hosting (.env must be read directly)
 
     // Run view:cache
     out("  Running: view:cache");

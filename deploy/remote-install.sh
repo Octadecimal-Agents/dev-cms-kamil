@@ -66,9 +66,8 @@ php "$REMOTE_APP/artisan" migrate --force 2>&1 || echo "⚠ Migrations may have 
 echo "▸ Clearing caches..."
 php "$REMOTE_APP/artisan" optimize:clear 2>&1
 
-echo "▸ Caching config & routes..."
-php "$REMOTE_APP/artisan" config:cache 2>&1
-php "$REMOTE_APP/artisan" route:cache 2>&1
+# NOTE: config:cache and route:cache break OVH shared hosting — .env must be read directly
+echo "▸ Caching views..."
 php "$REMOTE_APP/artisan" view:cache 2>&1
 
 # Cleanup

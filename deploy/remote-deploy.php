@@ -154,15 +154,8 @@ exec("php " . escapeshellarg($artisan) . " optimize:clear 2>&1", $output);
 out(implode("\n", $output));
 $output = [];
 
-out("▸ Caching config & routes...");
-exec("php " . escapeshellarg($artisan) . " config:cache 2>&1", $output);
-out(implode("\n", $output));
-$output = [];
-
-exec("php " . escapeshellarg($artisan) . " route:cache 2>&1", $output);
-out(implode("\n", $output));
-$output = [];
-
+// NOTE: config:cache and route:cache break OVH shared hosting — .env must be read directly
+out("▸ Caching views...");
 exec("php " . escapeshellarg($artisan) . " view:cache 2>&1", $output);
 out(implode("\n", $output));
 
