@@ -16,9 +16,9 @@
         { "label": "FAQ", "href": "#faq" }
       ],
       "cta": {
-        "label": "Zaloguj się",
-        "href": "/login",
-        "variant": "outline"
+        "label": "Rezerwuj",
+        "href": "#rezerwacja",
+        "variant": "primary"
       }
     },
     "hero": {
