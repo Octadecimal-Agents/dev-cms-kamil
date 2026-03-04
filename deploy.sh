@@ -226,7 +226,8 @@ if [[ "$SKIP_BUILD" == false ]]; then
 
     # Remove Next.js metadata directories that conflict with clean URLs
     # (Next.js creates slug/ dirs alongside slug.html for RSC payloads)
-    find "$STAGING/out/motocykle" -mindepth 1 -type d -exec rm -rf {} + 2>/dev/null || true
+    # Preserve csr-detail/ directory (CSR catch-all for new motorcycle slugs)
+    find "$STAGING/out/motocykle" -mindepth 1 -type d -not -name 'csr-detail' -exec rm -rf {} + 2>/dev/null || true
     # Remove .txt RSC payload files (not needed for static serving)
     find "$STAGING/out" -name '*.txt' -delete 2>/dev/null || true
 
