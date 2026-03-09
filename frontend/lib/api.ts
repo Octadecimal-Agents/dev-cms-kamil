@@ -9,8 +9,8 @@
 
 import mockContent from '@/data/mock-api-v2.json';
 
-const LARAVEL_CMS_API = 'https://dev.octadecimal.studio/api/2wheels';
-const LARAVEL_CMS_DOMAIN = 'https://dev.octadecimal.studio';
+const LARAVEL_CMS_API = 'https://tst.2wheels-rental.pl/api/2wheels';
+const LARAVEL_CMS_DOMAIN = 'https://tst.2wheels-rental.pl';
 
 // API Configuration (produkcja = Laravel CMS, lokalnie = localhost)
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || LARAVEL_CMS_API;

@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/storage/:path*", "destination": "https://cms.2wheels-rental.pl/storage/:path*" },
-    { "source": "/api/:path*", "destination": "https://cms.2wheels-rental.pl/api/:path*" }
+    { "source": "/storage/:path*", "destination": "https://tst.2wheels-rental.pl/storage/:path*" },
+    { "source": "/api/:path*", "destination": "https://tst.2wheels-rental.pl/api/:path*" }
   ]
 }
