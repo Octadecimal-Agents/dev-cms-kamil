@@ -11,8 +11,7 @@
         { "label": "O nas", "href": "#o-nas" },
         { "label": "Motocykle", "href": "#motocykle" },
         { "label": "Cennik", "href": "#cennik" },
-        { "label": "Kontakt", "href": "#kontakt" },
-        { "label": "Login", "href": "LOGIN_ADMIN" }
+        { "label": "Kontakt", "href": "#kontakt" }
       ],
       "cta": {
         "label": "Rezerwuj teraz",

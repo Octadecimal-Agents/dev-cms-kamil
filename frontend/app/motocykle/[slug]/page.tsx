@@ -11,7 +11,7 @@ const FALLBACK_SLUGS = (mockMotorcycles.data as { slug: string }[]).map((m) => (
 
 export async function generateStaticParams() {
   try {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dev.octadecimal.studio/api/2wheels';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://tst.2wheels-rental.pl/api/2wheels';
     const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || process.env.TENANT_ID || 'a0e1ef09-91b0-476a-aec1-45ae89c36bd4';
     
     const response = await fetch(`${API_BASE_URL}/motorcycles?tenant_id=${TENANT_ID}&per_page=100`, {

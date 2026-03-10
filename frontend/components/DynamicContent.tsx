@@ -167,14 +167,15 @@ export default function DynamicContent({
       <WhyUs whyUs={content.whyUs} />
       <Pricing pricing={content.pricing} bikes={bikes} />
       <Terms terms={content.terms} />
-      <Gallery gallery={content.gallery} bikes={bikes} />
+      {/* Gallery ukryta na życzenie klienta — KML-0035 */}
+      {/* <Gallery gallery={content.gallery} bikes={bikes} /> */}
       <Testimonials testimonials={content.testimonials} />
       <Location location={content.location} contact={content.contact} />
-      {/* ContactForm ukryty na życzenie L0 — funkcjonalność zachowana */}
-      {/* <ContactForm
+      <ContactForm
         contact={content.contact}
         reservationSettings={content.reservationSettings}
-      /> */}
+        bikes={bikes}
+      />
       <Footer
         site={content.site}
         footer={content.footer}

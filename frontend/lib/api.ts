@@ -9,13 +9,13 @@
 
 import mockContent from '@/data/mock-api-v2.json';
 
-const LARAVEL_CMS_API = 'https://dev.octadecimal.studio/api/2wheels';
-const LARAVEL_CMS_DOMAIN = 'https://dev.octadecimal.studio';
+const LARAVEL_CMS_API = 'https://tst.2wheels-rental.pl/api/2wheels';
+const LARAVEL_CMS_DOMAIN = 'https://tst.2wheels-rental.pl';
 
 // API Configuration (produkcja = Laravel CMS, lokalnie = localhost)
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || LARAVEL_CMS_API;
 const API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN || LARAVEL_CMS_DOMAIN;
-const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || process.env.TENANT_ID || 'a0e1ef09-91b0-476a-aec1-45ae89c36bd4';
+const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || process.env.TENANT_ID || '019c6cfd-55bb-7082-a6c2-e5c07e61ee07';
 
 // Helper do budowania URL z tenant_id
 function buildApiUrl(endpoint: string, params?: Record<string, string>): string {
@@ -96,6 +96,10 @@ export interface SiteData {
     nip?: string;
     krs?: string;
     regon?: string;
+    phone_piotrek?: string;
+    phone_kamil?: string;
+    phones?: { label: string; number: string }[];
+    whatsapp?: { label: string; number: string }[];
   };
   socialMedia?: {
     facebook?: string;
@@ -247,6 +251,7 @@ export interface ContactData {
     zip: string;
   };
   phone: string;
+  phones?: { label: string; number: string }[];
   email: string;
   hours: {
     weekdays: string;
@@ -259,7 +264,10 @@ export interface ContactData {
     nip?: string;
     krs?: string;
     regon?: string;
+    phone_piotrek?: string;
+    phone_kamil?: string;
   };
+  whatsapp?: { label: string; number: string }[];
   form: {
     namePlaceholder: string;
     emailPlaceholder: string;
@@ -392,6 +400,24 @@ function getStorageUrl(path: string | null | undefined): string {
   return path;
 }
 
+// Helper: build labeled phone list from company_data.phones[] (FAB only, no fallback)
+function buildPhonesList(
+  companyData?: {
+    phones?: { label: string; number: string }[];
+  },
+): { label: string; number: string }[] {
+  // Only return phones from CMS Repeater - no fallback to contact_phone
+  // contact_phone is for Location section (near map), not for FloatingActions
+  return companyData?.phones ?? [];
+}
+
+// Helper: build WhatsApp contacts list from company_data.whatsapp[]
+function buildWhatsAppList(
+  companyData?: { whatsapp?: { label: string; number: string }[] },
+): { label: string; number: string }[] {
+  return companyData?.whatsapp ?? [];
+}
+
 // Helper function to generate Google Maps embed URL from address or coordinates
 export function generateMapUrl(
   address: { street: string; city: string; zip: string },
@@ -472,12 +498,8 @@ export async function getSiteData(): Promise<SiteData> {
 
 export async function getNavigationData(): Promise<NavigationData> {
   const nav: NavigationData = { ...mockContent.content.navigation, links: [...mockContent.content.navigation.links], cta: { ...mockContent.content.navigation.cta } };
-  // Replace LOGIN_ADMIN placeholder with actual admin URL
-  nav.links = nav.links.map(link =>
-    link.href === 'LOGIN_ADMIN'
-      ? { ...link, href: `${API_DOMAIN}/admin` }
-      : link
-  );
+  // Filtruj link Login — usunięty z nawigacji (KML-0034)
+  nav.links = nav.links.filter(link => link.href !== 'LOGIN_ADMIN');
 
   // Update CTA with reservation settings — always show "Rezerwuj" instead of login
   nav.cta.label = 'Rezerwuj';
@@ -810,6 +832,8 @@ export async function getContactData(): Promise<ContactData> {
       },
       mapCoordinates: siteData.mapCoordinates,
       companyData: siteData.companyData,
+      phones: buildPhonesList(siteData.companyData),
+      whatsapp: buildWhatsAppList(siteData.companyData),
     };
   } catch (error) {
     console.error('Error fetching contact data:', error);
@@ -924,6 +948,8 @@ export async function getAllContent() {
     },
     mapCoordinates: siteData.mapCoordinates,
     companyData: siteData.companyData,
+    phones: buildPhonesList(siteData.companyData),
+    whatsapp: buildWhatsAppList(siteData.companyData),
   };
 
   return {

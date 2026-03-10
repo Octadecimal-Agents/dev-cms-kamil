@@ -7,6 +7,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'tst.2wheels-rental.pl',
+        pathname: '/storage/**',
+      },
+      {
+        protocol: 'https',
         hostname: '2wheels-rental.pl',
         pathname: '/storage/**',
       },
