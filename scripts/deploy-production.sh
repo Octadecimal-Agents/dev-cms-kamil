@@ -282,6 +282,7 @@ if [[ "$SKIP_BACKEND" == false ]]; then
     rsync $RSYNC_OPTS --delete \
         --exclude='.git' \
         --exclude='node_modules' \
+        --exclude='vendor' \
         --exclude='.env' \
         --exclude='.env.*' \
         --exclude='storage/logs/*' \
