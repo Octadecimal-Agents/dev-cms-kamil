@@ -180,56 +180,77 @@ fi
 # ── 3. Merge staging → main ──
 log_info "=== KROK 3: Merge staging → main ==="
 
-CURRENT_BRANCH=$(git branch --show-current)
-git checkout $PROD_BRANCH --quiet
-git pull origin $PROD_BRANCH --quiet
+if [[ "$DRY_RUN" == true ]]; then
+    log_warn "DRY-RUN: Pominięto merge (pokazuję co by się zmieniło):"
+    git diff --stat origin/$PROD_BRANCH..origin/$STAGING_BRANCH | tail -15
+    log_ok "Merge: symulacja OK"
+else
+    CURRENT_BRANCH=$(git branch --show-current)
+    git checkout $PROD_BRANCH --quiet
+    git pull origin $PROD_BRANCH --quiet
 
-log_info "Merguje origin/$STAGING_BRANCH..."
-if ! git merge origin/$STAGING_BRANCH --no-edit; then
-    log_error "Merge conflict! Rozwiąż ręcznie i uruchom ponownie."
-    exit 1
+    log_info "Merguje origin/$STAGING_BRANCH..."
+    if ! git merge origin/$STAGING_BRANCH --no-edit; then
+        log_error "Merge conflict! Rozwiąż ręcznie i uruchom ponownie."
+        exit 1
+    fi
+    log_ok "Merge OK"
 fi
-log_ok "Merge OK"
 
 # ── 4. Napraw URL-e stagingowe ──
 log_info "=== KROK 4: Naprawa URL-i produkcyjnych ==="
 
-URLS_FIXED=false
+if [[ "$DRY_RUN" == true ]]; then
+    # W dry-run sprawdzamy co BY było naprawione
+    STAGING_TENANT="019c6cfd-55bb-7082-a6c2-e5c07e61ee07"
+    if git show origin/$STAGING_BRANCH:frontend/lib/api.ts 2>/dev/null | grep -q "tst.2wheels-rental.pl"; then
+        log_warn "DRY-RUN: Znaleziono staging URL w api.ts (będzie naprawiony)"
+    fi
+    if git show origin/$STAGING_BRANCH:frontend/vercel.json 2>/dev/null | grep -q "tst.2wheels-rental.pl"; then
+        log_warn "DRY-RUN: Znaleziono staging URL w vercel.json (będzie naprawiony)"
+    fi
+    if git show origin/$STAGING_BRANCH:frontend/lib/api.ts 2>/dev/null | grep -q "$STAGING_TENANT"; then
+        log_warn "DRY-RUN: Znaleziono staging TENANT_ID (będzie naprawiony)"
+    fi
+    log_ok "URL-e: symulacja OK"
+else
+    URLS_FIXED=false
 
-# api.ts
-if grep -q "tst.2wheels-rental.pl" frontend/lib/api.ts 2>/dev/null; then
-    log_warn "Naprawiam staging URL w api.ts..."
-    sed -i "s|https://tst.2wheels-rental.pl|https://cms.2wheels-rental.pl|g" frontend/lib/api.ts
-    URLS_FIXED=true
-fi
+    # api.ts
+    if grep -q "tst.2wheels-rental.pl" frontend/lib/api.ts 2>/dev/null; then
+        log_warn "Naprawiam staging URL w api.ts..."
+        sed -i "s|https://tst.2wheels-rental.pl|https://cms.2wheels-rental.pl|g" frontend/lib/api.ts
+        URLS_FIXED=true
+    fi
 
-# vercel.json
-if grep -q "tst.2wheels-rental.pl" frontend/vercel.json 2>/dev/null; then
-    log_warn "Naprawiam staging URL w vercel.json..."
-    sed -i "s|https://tst.2wheels-rental.pl|https://cms.2wheels-rental.pl|g" frontend/vercel.json
-    URLS_FIXED=true
-fi
+    # vercel.json
+    if grep -q "tst.2wheels-rental.pl" frontend/vercel.json 2>/dev/null; then
+        log_warn "Naprawiam staging URL w vercel.json..."
+        sed -i "s|https://tst.2wheels-rental.pl|https://cms.2wheels-rental.pl|g" frontend/vercel.json
+        URLS_FIXED=true
+    fi
 
-# Staging TENANT_ID → Production TENANT_ID
-STAGING_TENANT="019c6cfd-55bb-7082-a6c2-e5c07e61ee07"
-if grep -q "$STAGING_TENANT" frontend/lib/api.ts 2>/dev/null; then
-    log_warn "Naprawiam TENANT_ID w api.ts..."
-    sed -i "s|$STAGING_TENANT|$PROD_TENANT_ID|g" frontend/lib/api.ts
-    URLS_FIXED=true
-fi
+    # Staging TENANT_ID → Production TENANT_ID
+    STAGING_TENANT="019c6cfd-55bb-7082-a6c2-e5c07e61ee07"
+    if grep -q "$STAGING_TENANT" frontend/lib/api.ts 2>/dev/null; then
+        log_warn "Naprawiam TENANT_ID w api.ts..."
+        sed -i "s|$STAGING_TENANT|$PROD_TENANT_ID|g" frontend/lib/api.ts
+        URLS_FIXED=true
+    fi
 
-if [[ "$URLS_FIXED" == true ]]; then
-    git add frontend/lib/api.ts frontend/vercel.json 2>/dev/null || true
-    git commit -m "fix(deploy): napraw URL-e i TENANT_ID na produkcyjne
+    if [[ "$URLS_FIXED" == true ]]; then
+        git add frontend/lib/api.ts frontend/vercel.json 2>/dev/null || true
+        git commit -m "fix(deploy): napraw URL-e i TENANT_ID na produkcyjne
 
 Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>" --quiet 2>/dev/null || true
-    log_ok "URL-e naprawione i zacommitowane"
-else
-    log_ok "URL-e już produkcyjne"
+        log_ok "URL-e naprawione i zacommitowane"
+    else
+        log_ok "URL-e już produkcyjne"
+    fi
 fi
 
 # ── 5. Backup produkcji ──
-if [[ "$SKIP_BACKUP" == false && "$SKIP_BACKEND" == false ]]; then
+if [[ "$SKIP_BACKUP" == false && "$SKIP_BACKEND" == false && "$DRY_RUN" == false ]]; then
     log_info "=== KROK 5: Backup produkcji ==="
 
     BACKUP_NAME="2wheels-$(date +%Y%m%d-%H%M%S)"
@@ -244,6 +265,9 @@ if [[ "$SKIP_BACKUP" == false && "$SKIP_BACKEND" == false ]]; then
         mysqldump -h wheelse281.mysql.db -u wheelse281 wheelse281 \
             > $BACKUP_DIR/$BACKUP_NAME.sql 2>/dev/null
     " && log_ok "Backup: $BACKUP_DIR/$BACKUP_NAME" || log_warn "Backup DB pominięty"
+elif [[ "$DRY_RUN" == true && "$SKIP_BACKUP" == false && "$SKIP_BACKEND" == false ]]; then
+    log_info "=== KROK 5: Backup produkcji ==="
+    log_warn "DRY-RUN: Pominięto backup (byłby utworzony: $BACKUP_DIR/2wheels-YYYYMMDD-HHMMSS)"
 fi
 
 # ── 6. Deploy backend (rsync) ──
