@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function () {
 // ============================================================
 // 2Wheels Rental API (public, no auth)
 // ============================================================
-Route::prefix('2wheels')->middleware('web')->group(function () {
+Route::prefix('2wheels')->group(function () {
     Route::get('/motorcycles', [TwoWheelsController::class, 'motorcycles'])->name('api.2wheels.motorcycles');
     Route::get('/motorcycles/{slug}', [TwoWheelsController::class, 'motorcycle'])->name('api.2wheels.motorcycle');
     Route::get('/brands', [TwoWheelsController::class, 'brands'])->name('api.2wheels.brands');
