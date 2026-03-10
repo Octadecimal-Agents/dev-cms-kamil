@@ -15,7 +15,7 @@
       ],
       "cta": {
         "label": "Rezerwuj teraz",
-        "href": "https://forms.monday.com/forms/ed47132e0b7239abdf0ec7e5504f2883?r=euc1"
+        "href": "#kontakt"
       }
     },
     "sections": {
@@ -26,7 +26,7 @@
         "image": "/img/hero-bike.jpg",
         "buttons": [
           { "label": "Zobacz ofertę", "href": "#motocykle", "variant": "primary" },
-          { "label": "Rezerwuj teraz", "href": "https://forms.monday.com/forms/ed47132e0b7239abdf0ec7e5504f2883?r=euc1", "variant": "secondary" }
+          { "label": "Rezerwuj teraz", "href": "#kontakt", "variant": "secondary" }
         ],
         "stats": [
           { "value": "50+", "label": "Motocykli" },
