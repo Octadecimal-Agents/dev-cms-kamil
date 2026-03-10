@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 # deploy-production.sh — Pełny deploy 2wheels-rental.pl na produkcję
 #
-# Użycie: ./scripts/deploy-production.sh [--skip-backup] [--skip-frontend] [--skip-backend] [--force]
+# Użycie: ./scripts/deploy-production.sh [--dry-run] [--test] [--skip-backup] [--skip-frontend] [--skip-backend] [--force]
+#
+# Opcje testowania:
+#   --dry-run   Pokaż co by się stało bez wykonywania (rsync -n)
+#   --test      Deploy do /home/wheelse/test-deploy/ zamiast produkcji
 #
 # Wymagania:
 #   - SSH alias: ovh-2wheels
@@ -32,8 +36,9 @@ PROD_FRONTEND_URL="https://2wheels-rental.pl"
 PROD_API_URL="https://cms.2wheels-rental.pl/api/2wheels"
 STAGING_API_URL="https://tst.2wheels-rental.pl/api/2wheels"
 
-# Tenant ID produkcji
+# Tenant IDs
 PROD_TENANT_ID="a0e1ef09-91b0-476a-aec1-45ae89c36bd4"
+STAGING_TENANT_ID="019c6cfd-55bb-7082-a6c2-e5c07e61ee07"
 
 # Kolory
 RED='\033[0;31m'
@@ -47,6 +52,8 @@ SKIP_BACKUP=false
 SKIP_FRONTEND=false
 SKIP_BACKEND=false
 FORCE=false
+DRY_RUN=false
+TEST_MODE=false
 
 # ============================================================================
 # FUNKCJE
@@ -67,17 +74,39 @@ cleanup_temp() {
 
 while [[ $# -gt 0 ]]; do
     case $1 in
+        --dry-run) DRY_RUN=true; shift ;;
+        --test) TEST_MODE=true; shift ;;
         --skip-backup) SKIP_BACKUP=true; shift ;;
         --skip-frontend) SKIP_FRONTEND=true; shift ;;
         --skip-backend) SKIP_BACKEND=true; shift ;;
         --force) FORCE=true; shift ;;
         --help|-h)
-            echo "Użycie: $0 [--skip-backup] [--skip-frontend] [--skip-backend] [--force]"
+            echo "Użycie: $0 [--dry-run] [--test] [--skip-backup] [--skip-frontend] [--skip-backend] [--force]"
+            echo ""
+            echo "  --dry-run       Pokaż co by się stało bez wykonywania"
+            echo "  --test          Deploy do test-deploy/ zamiast produkcji"
+            echo "  --skip-backup   Pomiń backup"
+            echo "  --skip-frontend Pomiń deploy frontend (Vercel)"
+            echo "  --skip-backend  Pomiń deploy backend (OVH)"
+            echo "  --force         Pomiń potwierdzenie hasłem"
             exit 0
             ;;
         *) log_error "Nieznana opcja: $1"; exit 1 ;;
     esac
 done
+
+# Jeśli test mode, zmień katalog docelowy
+if [[ "$TEST_MODE" == true ]]; then
+    PROD_DIR="/home/wheelse/test-deploy"
+    log_warn "TEST MODE: Deploy do $PROD_DIR (nie produkcja)"
+fi
+
+# Opcje rsync dla dry-run
+RSYNC_OPTS="-avz"
+if [[ "$DRY_RUN" == true ]]; then
+    RSYNC_OPTS="-avzn"  # -n = dry-run
+    log_warn "DRY-RUN MODE: Żadne zmiany nie będą wprowadzone"
+fi
 
 # ============================================================================
 # START
@@ -96,7 +125,7 @@ log_info "=== KROK 1: Pre-flight checks ==="
 
 # Sprawdź staging API
 log_info "Sprawdzam staging API..."
-STAGING_OK=$(curl -sf -o /dev/null -w "%{http_code}" "${STAGING_API_URL}/site-setting?tenant_id=${PROD_TENANT_ID}" 2>/dev/null || echo "000")
+STAGING_OK=$(curl -sf -o /dev/null -w "%{http_code}" "${STAGING_API_URL}/site-setting?tenant_id=${STAGING_TENANT_ID}" 2>/dev/null || echo "000")
 if [[ "$STAGING_OK" != "200" ]]; then
     log_error "Staging API nie odpowiada (HTTP $STAGING_OK)"
     log_error "Przetestuj staging przed deploy na produkcję!"
@@ -221,7 +250,12 @@ fi
 if [[ "$SKIP_BACKEND" == false ]]; then
     log_info "=== KROK 6: Deploy backend (rsync) ==="
 
-    rsync -avz --delete \
+    # Utwórz katalog docelowy jeśli nie istnieje (test mode)
+    if [[ "$DRY_RUN" == false ]]; then
+        ssh $SSH_HOST "mkdir -p $PROD_DIR" 2>/dev/null || true
+    fi
+
+    rsync $RSYNC_OPTS --delete \
         --exclude='.git' \
         --exclude='node_modules' \
         --exclude='.env' \
@@ -235,29 +269,38 @@ if [[ "$SKIP_BACKEND" == false ]]; then
         --exclude='docker*' \
         --exclude='scripts' \
         "$PROJECT_ROOT/" "$SSH_HOST:$PROD_DIR/" \
-        2>&1 | tail -5
+        2>&1 | tail -20
 
-    # Napraw symlink storage
-    log_info "Naprawiam symlink storage..."
-    ssh $SSH_HOST "
-        cd $PROD_DIR
-        rm -f public/storage public/._storage 2>/dev/null || true
-        ln -sf ../storage/app/public public/storage
-        chmod -R 755 storage bootstrap/cache 2>/dev/null || true
-    "
-
-    log_ok "Backend zdeployowany"
+    if [[ "$DRY_RUN" == true ]]; then
+        log_warn "DRY-RUN: Powyżej lista plików które BY zostały przesłane"
+        log_ok "Backend: symulacja OK"
+    else
+        # Napraw symlink storage
+        log_info "Naprawiam symlink storage..."
+        ssh $SSH_HOST "
+            cd $PROD_DIR
+            rm -f public/storage public/._storage 2>/dev/null || true
+            ln -sf ../storage/app/public public/storage
+            chmod -R 755 storage bootstrap/cache 2>/dev/null || true
+        "
+        log_ok "Backend zdeployowany"
+    fi
 fi
 
 # ── 7. Deploy frontend (push → Vercel) ──
 if [[ "$SKIP_FRONTEND" == false ]]; then
     log_info "=== KROK 7: Deploy frontend (Vercel) ==="
 
-    git push origin $PROD_BRANCH --quiet
-    log_ok "Push do main OK — Vercel auto-deploy triggered"
+    if [[ "$DRY_RUN" == true ]]; then
+        log_warn "DRY-RUN: Pominięto git push origin $PROD_BRANCH"
+        log_ok "Frontend: symulacja OK"
+    else
+        git push origin $PROD_BRANCH --quiet
+        log_ok "Push do main OK — Vercel auto-deploy triggered"
 
-    log_info "Czekam 90s na build Vercel..."
-    sleep 90
+        log_info "Czekam 90s na build Vercel..."
+        sleep 90
+    fi
 fi
 
 # ── 8. Weryfikacja ──
