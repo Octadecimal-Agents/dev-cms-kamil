@@ -361,7 +361,7 @@ echo "  Backend:  $PROD_BACKEND_URL"
 echo "  Frontend: $PROD_FRONTEND_URL"
 echo ""
 
-if [[ "$SKIP_BACKUP" == false && "$SKIP_BACKEND" == false ]]; then
+if [[ "$SKIP_BACKUP" == false && "$SKIP_BACKEND" == false && "$DRY_RUN" == false && -n "${BACKUP_NAME:-}" ]]; then
     echo "  Rollback: ssh $SSH_HOST 'rm -rf $PROD_DIR && cp -r $BACKUP_DIR/$BACKUP_NAME $PROD_DIR'"
 fi
 echo ""
